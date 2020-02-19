@@ -7,7 +7,7 @@
 <h2>@ViewData["Title"]</h2>
 <hr />
 <p>
-    <a class="btn btn-success" asp-action="Create">Novo Livro</a>
+    <a class="btn btn-success" asp-action="Create"><span class="fa fa-plus"></span>&nbsp;Novo Livro</a>
 </p>
 
 @using (Html.BeginForm("Index", "Livros", FormMethod.Post))
@@ -27,7 +27,7 @@
             @Html.TextBox("searchString", null, new { @class = "form-control" })
         </div>
         <div class="col-lg-3">
-            <input type="submit" value="Buscar" class="btn btn-primary" />
+            <button class="btn btn-primary" type="submit" title="Pesquisar"><i class="fa fa-search"></i>&nbsp;Pesquisar</button>
         </div>
         <div class="col-lg-3">
             &nbsp;
@@ -76,9 +76,9 @@
                     @Html.DisplayFor(modelItem => item.DtPublicacaoFormatted)
                 </td>
                 <td class="text-right">
-                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
-                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Detalhes</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" title="Visualizar"><span class="fa fa-search"></span></a>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><span class="fa fa-pencil-alt"></span></a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id" title="Excluir"><span class="fa fa-trash"></span></a>
                 </td>
             </tr>
         }
