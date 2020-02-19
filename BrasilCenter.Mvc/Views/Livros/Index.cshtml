@@ -1,0 +1,86 @@
+﻿@model IEnumerable<BrasilCenter.Business.Models.Livro>
+
+@{
+    ViewData["Title"] = "Livros";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+<p>
+    <a class="btn btn-success" asp-action="Create">Novo Livro</a>
+</p>
+
+@using (Html.BeginForm("Index", "Livros", FormMethod.Post))
+{
+    <div class="row">
+        @{
+            var filtroBusca = new Dictionary<string, string> { { "Nome", "Nome" }, { "Isbn", "Isbn" }, { "Autor", "Autor" } };
+            SelectList selectList = new SelectList(filtroBusca.Select(x => new { Value = x.Key, Text = x.Value }), "Value", "Text");
+        }
+        <div class="col-lg-1">
+            @Html.Label("Filtro:")
+        </div>
+        <div class="col-lg-4">
+            @Html.DropDownList("filterList", selectList, "Selecione o filtro", new { @class = "form-control" })
+        </div>
+        <div class="col-lg-4">
+            @Html.TextBox("searchString", null, new { @class = "form-control" })
+        </div>
+        <div class="col-lg-3">
+            <input type="submit" value="Buscar" class="btn btn-primary" />
+        </div>
+        <div class="col-lg-3">
+            &nbsp;
+        </div>
+    </div>
+}
+
+<table class="table table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th class="text-center">
+                @Html.ActionLink("Nome", "Index", new { sortOrder = ViewBag.NomeSortParm }, new { @style = "text-decoration: none; color: #fff;" })
+            </th>
+            <th class="text-center">
+                @Html.ActionLink("Isbn", "Index", new { sortOrder = ViewBag.IsbnSortParm }, new { @style = "text-decoration: none; color: #fff;" })
+            </th>
+            <th class="text-center">
+                @Html.ActionLink("Autor", "Index", new { sortOrder = ViewBag.AutorSortParm }, new { @style = "text-decoration: none; color: #fff;" })
+            </th>
+            <th class="text-center">
+                @Html.ActionLink("Preço", "Index", new { sortOrder = ViewBag.PrecoSortParm }, new { @style = "text-decoration: none; color: #fff;" })
+            </th>
+            <th class="text-center">
+                @Html.ActionLink("Data Publicação", "Index", new { sortOrder = ViewBag.DataPubSortParm }, new { @style = "text-decoration: none; color: #fff;" })
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Isbn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Autor)
+                </td>
+                <td class="text-right">
+                    @Html.DisplayFor(modelItem => item.PrecoFormatted)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.DtPublicacaoFormatted)
+                </td>
+                <td class="text-right">
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Detalhes</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Principal";
+}
+
+@using (Html.BeginForm("Index", "Livros", FormMethod.Post, new { enctype = "multipartform-data" }))
+{
+    <div class="row">
+        <div class="col-lg-12">
+            &nbsp;
+        </div>
+    </div>
+    <div class="jumbotron">
+        <center>
+            <img src="~/img/logo-brasilcenter.png" width="400" data-canonical-src="" style="max-width:100%;">
+            <p>&nbsp;</p>
+            <p class="lead">Desafio - Projeto Livraria</p>
+        </center>
+        <button type="submit" class="btn btn-primary btn-lg">
+            <span>Iniciar Desafio</span>
+        </button>
+    </div>
+
+}
