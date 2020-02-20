@@ -8,7 +8,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nome" class="control-label"></label>
@@ -36,22 +36,40 @@
                 <span asp-validation-for="DtPublicacao" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Capa" class="control-label"></label>
-                <input asp-for="Capa" class="form-control" />
-                <span asp-validation-for="Capa" class="text-danger"></span>
+                <label>Capa Atual</label><br />
+                <img src="~/uploads/capas_livros/@Model.Capa" alt="@Model.Capa" style="width:30%; height:30%" />
+            </div>
+            <div>
+                <span class="btn btn-success fileinput-button">
+                    <i class="fa fa-plus"></i>
+                    <span>Adicionar Nova Capa</span>
+                    <input id="files" type="file" name="files[]" multiple="">
+                </span>
+                <div id="img_nome">Nenhum arquivo selecionado.</div>
             </div>
             <input type="hidden" asp-for="Id" />
+            <div>&nbsp;</div>
             <div class="form-group">
                 <input type="submit" value="Salvar" class="btn btn-success" />
+                <a asp-action="Index" class="btn btn-primary">Voltar</a>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index" class="btn btn-primary">Voltar</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        $("#files").change(function () {
+            $("#img_nome").text(this.files[0].name);
+            $("#img_nome")[0].style.display = 'block';
+        });
+
+        $("#CapaUpload").attr("data-val", "true");
+        $("#CapaUpload").attr("data-val-required", "Adicione a capa do livro.")
+    </script>
 }

@@ -33,16 +33,18 @@
             @Html.DisplayFor(model => model.Preco)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DtPublicacao)
+            Data Publi.
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DtPublicacao)
+            @Html.DisplayFor(model => model.DtPublicacaoFormatted)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Capa)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Capa)
+            <div>
+                <img src="~/uploads/capas_livros/@Model.Capa" alt="@Model.Capa" style="width:30%; height:30%" />
+            </div>
         </dd>
     </dl>
 </div>

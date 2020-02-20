@@ -218,6 +218,9 @@ namespace BrasilCenter.Mvc.Controllers
             {
                 try
                 {
+                    if (!await UploadArquivo(livro))
+                        return View(livro);
+
                     _context.Update(livro);
                     await _context.SaveChangesAsync();
                 }
