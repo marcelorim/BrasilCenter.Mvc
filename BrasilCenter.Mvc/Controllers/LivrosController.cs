@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using BrasilCenter.Business.Models;
 using BrasilCenter.Mvc.Data;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
 
 namespace BrasilCenter.Mvc.Controllers
 {
@@ -16,9 +20,12 @@ namespace BrasilCenter.Mvc.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public LivrosController(ApplicationDbContext context)
+        private IHostingEnvironment _env;
+
+        public LivrosController(ApplicationDbContext context, IHostingEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         public async Task<IActionResult> Index(string sortOrder, string filterList, string searchString)
@@ -121,6 +128,8 @@ namespace BrasilCenter.Mvc.Controllers
             return View();
         }
 
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Livro livro)
@@ -128,18 +137,62 @@ namespace BrasilCenter.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 bool isbnExiste = _context.Livros.AsNoTracking().Any(i => i.Isbn == livro.Isbn);
+
                 if (isbnExiste)
                 {
                     ModelState.AddModelError("error", "Isbn já cadastrado!");
                 }
                 else
                 {
+                    if (!await UploadArquivo(livro))
+                        return View(livro);
+
                     _context.Add(livro);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
             }
             return View(livro);
+        }
+
+        private async Task<bool> UploadArquivo(Livro livro)
+        {
+            var webRoot = _env.WebRootPath;
+            var caminhoUpload = Path.Combine(webRoot, "uploads\\capas_livros");
+
+            if (!Directory.Exists(caminhoUpload))
+            {
+                Directory.CreateDirectory(caminhoUpload);
+            }
+
+            IFormFileCollection arquivos = HttpContext.Request.Form.Files;
+            foreach (var img in arquivos)
+            {
+                if (img != null && img.Length > 0)
+                {
+                    var arquivo = img;
+                    if (arquivo.Length > 0)
+                    {
+                        var novoNomeArquivo = Guid.NewGuid().ToString() + "_" + arquivo.FileName;
+                        var pathCompleto = Path.Combine(caminhoUpload, novoNomeArquivo);
+
+                        if (System.IO.File.Exists(pathCompleto))
+                        {
+                            ModelState.AddModelError(key: string.Empty, errorMessage: "Já existe um arquivo com esse nome!");
+                            return false;
+                        }
+
+                        using (var fileStream = new FileStream(Path.Combine(caminhoUpload, novoNomeArquivo), FileMode.Create))
+                        {
+                            await arquivo.CopyToAsync(fileStream);
+                            livro.Capa = novoNomeArquivo;
+                        }
+
+                    }
+                }
+            }
+
+            return true;
         }
 
         public async Task<IActionResult> Edit(Guid? id)

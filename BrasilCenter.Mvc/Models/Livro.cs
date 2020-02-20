@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -26,8 +27,10 @@ namespace BrasilCenter.Business.Models
         [DisplayName("Data da Publicação")]
         public DateTime? DtPublicacao { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string Capa { get; set; }
+
+        //[Required(ErrorMessage = "O campo {0} é obrigatório")]
+        //public string Capa { get; set; }
 
         public string PrecoFormatted
         {
